@@ -1,19 +1,22 @@
 const refs = {
-	timerDays: document.querySelector('[data-value="days"]'),
-	timerHours: document.querySelector('[data-value="hours"]'),
-	timerMins: document.querySelector('[data-value="mins"]'),
-	timerSecs: document.querySelector('[data-value="secs"]'),
+	// timerDays: document.querySelector('[data-value="days"]'),
+	// timerHours: document.querySelector('[data-value="hours"]'),
+	// timerMins: document.querySelector('[data-value="mins"]'),
+	// timerSecs: document.querySelector('[data-value="secs"]'),
 	mainTitle: document.querySelector('.main-title')
 }
+
 
 class Timer {
 	constructor ({onTick}) {
 		this.targetDate = 'Jul 17 2021';
-		// this.targetDate = 'Jun 13 2021 10:38:00';
+		this.selector = '#timer-1';
 
 		this.timeIntervalId = null;
-		this.onTick = onTick;
-	}
+		this.onTick = onTick;	
+
+	}	
+	
 	pad(value) {
 		return String(value).padStart(2, '0')
 	}
@@ -37,29 +40,55 @@ class Timer {
 	}
 	
 	initializeClock() {
-		this.onTick();
+		const clock = document.querySelector(this.selector);
+		const timerDays = clock.querySelector('[data-value="days"]');
+		const timerHours = clock.querySelector('[data-value="hours"]');
+		const timerMins = clock.querySelector('[data-value="mins"]');
+		const timerSecs = clock.querySelector('[data-value="secs"]');
+
+		function updateClockFace() {
+			const t = timer.onTimeComponents(timer.targetDate);
+
+			timerDays.innerText = t.days;
+			timerHours.innerHTML = ('0' + t.hours).slice(-2);
+			timerMins.innerHTML = ('0' + t.mins).slice(-2);
+			timerSecs.innerHTML = ('0' + t.secs).slice(-2);
+
+			if (t.total <= 0) {
+				clearInterval(timer.timeIntervalId);
+				refs.mainTitle.textContent = 'Распродажа закончилась!!!';
+				refs.mainTitle.style.color = '#ff0000';
+			}
+		}
+
+		updateClockFace()
+		// this.onTick();
+
 		this.timeIntervalId = setInterval(updateClockFace, 1000)
+		// this.timeIntervalId = setInterval(this.onTick, 1000)
 	}
 }
 
 const timer = new Timer({
-	onTick: updateClockFace,
+	// onTick: updateClockFace,
 });
 
-function updateClockFace() {
-	const t = timer.onTimeComponents(timer.targetDate);
+// function updateClockFace() {
+// 	const t = timer.onTimeComponents(timer.targetDate);
+// 	// console.dir(t.days)
+// 	// console.dir(this.timerDays)
 
-	refs.timerDays.innerHTML = t.days;
-	refs.timerHours.innerHTML = ('0' + t.hours).slice(-2);
-	refs.timerMins.innerHTML = ('0' + t.mins).slice(-2);
-	refs.timerSecs.innerHTML = ('0' + t.secs).slice(-2);
+// 	timer.timerDays.innerText = t.days;
+// 	timer.timerHours.innerHTML = ('0' + t.hours).slice(-2);
+// 	timer.timerMins.innerHTML = ('0' + t.mins).slice(-2);
+// 	timer.timerSecs.innerHTML = ('0' + t.secs).slice(-2);
 
-	if (t.total <= 0) {
-		clearInterval(timer.timeIntervalId);
-		refs.mainTitle.textContent = 'Распродажа закончилась!!!';
-		refs.mainTitle.style.color = '#ff0000';
-	}
-}
+// 	if (t.total <= 0) {
+// 		clearInterval(timer.timeIntervalId);
+// 		refs.mainTitle.textContent = 'Распродажа закончилась!!!';
+// 		refs.mainTitle.style.color = '#ff0000';
+// 	}
+// }
 
 timer.initializeClock()
 
