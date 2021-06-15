@@ -8,13 +8,12 @@ const refs = {
 
 
 class Timer {
-	constructor ({onTick}) {
-		this.targetDate = 'Jul 17 2021';
-		this.selector = '#timer-1';
+	constructor ({onTick, targetDate, selector }) {
+		this.targetDate = targetDate;
+		this.selector = selector;
 
 		this.timeIntervalId = null;
-		this.onTick = onTick;	
-
+		// this.onTick = onTick;	
 	}	
 	
 	pad(value) {
@@ -45,52 +44,55 @@ class Timer {
 		const timerHours = clock.querySelector('[data-value="hours"]');
 		const timerMins = clock.querySelector('[data-value="mins"]');
 		const timerSecs = clock.querySelector('[data-value="secs"]');
-
+		
+		const targets = this.targetDate;
+		const intervalId = this.timeIntervalId;
+		
+		
+		if (Number(timerDays.textContent) === 0 & Number(timerHours.textContent) === 0 & Number(timerMins.textContent) === 0 & Number(timerSecs.textContent) === 0) {
+			clearInterval(intervalId);
+			return
+		}
+		
+		
 		function updateClockFace() {
-			const t = timer.onTimeComponents(timer.targetDate);
+			const t = timer.onTimeComponents(targets);
+			
+			if (Number(timerDays.textContent) === 0 & Number(timerHours.textContent) === 0 & Number(timerMins.textContent) === 0 & Number(timerSecs.textContent) === 0) {
+				clearInterval(intervalId);
+				refs.mainTitle.textContent = 'Распродажа закончилась!!!';
+				refs.mainTitle.style.color = '#ff0000';
+				return;
+			};
 
 			timerDays.innerText = t.days;
 			timerHours.innerHTML = ('0' + t.hours).slice(-2);
 			timerMins.innerHTML = ('0' + t.mins).slice(-2);
 			timerSecs.innerHTML = ('0' + t.secs).slice(-2);
-
-			if (t.total <= 0) {
-				clearInterval(timer.timeIntervalId);
-				refs.mainTitle.textContent = 'Распродажа закончилась!!!';
-				refs.mainTitle.style.color = '#ff0000';
-			}
 		}
 
 		updateClockFace()
 		// this.onTick();
-
-		this.timeIntervalId = setInterval(updateClockFace, 1000)
-		// this.timeIntervalId = setInterval(this.onTick, 1000)
+		this.timeIntervalId = setInterval(updateClockFace, 1000)		
 	}
+
+	
 }
 
+
 const timer = new Timer({
+	targetDate : 'Jun 16 2021 19:39:00',
+	selector : '#timer-1',
 	// onTick: updateClockFace,
 });
 
-// function updateClockFace() {
-// 	const t = timer.onTimeComponents(timer.targetDate);
-// 	// console.dir(t.days)
-// 	// console.dir(this.timerDays)
-
-// 	timer.timerDays.innerText = t.days;
-// 	timer.timerHours.innerHTML = ('0' + t.hours).slice(-2);
-// 	timer.timerMins.innerHTML = ('0' + t.mins).slice(-2);
-// 	timer.timerSecs.innerHTML = ('0' + t.secs).slice(-2);
-
-// 	if (t.total <= 0) {
-// 		clearInterval(timer.timeIntervalId);
-// 		refs.mainTitle.textContent = 'Распродажа закончилась!!!';
-// 		refs.mainTitle.style.color = '#ff0000';
-// 	}
-// }
-
 timer.initializeClock()
+
+
+
+
+
+
 
 
 
