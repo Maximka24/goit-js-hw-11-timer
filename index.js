@@ -3,12 +3,10 @@ const refs = {
 }
 
 class Timer {
-	constructor ({onTick, targetDate, selector }) {
+	constructor ({ targetDate, selector }) {
 		this.targetDate = targetDate;
 		this.selector = selector;
-
-		this.timeIntervalId = null;
-		this.onTick = onTick;	
+		this.timeIntervalId = null;	
 	}		
 	
 	initializeClock() {		
@@ -23,11 +21,11 @@ class Timer {
 				clearInterval(this.intervalId);
 				refs.mainTitle.textContent = 'Распродажа закончилась!!!';
 				refs.mainTitle.style.color = '#ff0000';
-				return
+				returnЖ;
 			}
 
 			const times = this.onTimeComponents(this.targetDate);
-			this.onTick(times, timerDays, timerHours, timerMins, timerSecs);
+			this.updateClockFace(times, timerDays, timerHours, timerMins, timerSecs);
 
 		}, 1000)			
 	}
@@ -53,90 +51,21 @@ class Timer {
 
 		return {total, days, hours, mins, secs }
 	}	
+
+	updateClockFace({days, hours, mins, secs}, timerDays, timerHours, timerMins, timerSecs) {
+		timerDays.innerHTML = days;
+		timerHours.innerHTML = ('0' + hours).slice(-2);
+		timerMins.innerHTML = ('0' + mins).slice(-2);
+		timerSecs.innerHTML = ('0' + secs).slice(-2);
+	}
 }
 
-function updateClockFace({days, hours, mins, secs}, timerDays, timerHours, timerMins, timerSecs) {
-	timerDays.innerHTML = days;
-	timerHours.innerHTML = ('0' + hours).slice(-2);
-	timerMins.innerHTML = ('0' + mins).slice(-2);
-	timerSecs.innerHTML = ('0' + secs).slice(-2);
-}
+
 
 
 const timer = new Timer({
-	targetDate : 'Jun 22 2021 21:00:00',
+	targetDate : 'Jun 20 2021 17:19:00',
 	selector : '#timer-1',
-	onTick: updateClockFace,
 });
 
 timer.initializeClock()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//* --------------------------------------------------------------------------*//
-
-// class Timer {
-// 	constructor ({onTick}) {
-// 		// this.intervalId = null;
-// 		this.onTick = onTick;
-// 	}
-
-// 	start() {
-// 		const startTime = Date.now();
-
-// 		this.intervalId = setInterval(() => {
-// 			const currentTime = Date.now()
-// 			const deltaTime = currentTime - startTime;
-// 			const time = this.onTimeComponents(deltaTime);
-			
-// 			this.onTick(time);
-
-// 		}, 1000)
-// 	}
-
-// 	pad(value) {
-// 		return String(value).padStart(2, '0')
-// 	}
-
-// 	onTimeComponents (time) {
-// 		const days = this.pad(Math.floor(time / (1000 * 60 * 60 * 24)));
-// 		const hours = this.pad(Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
-// 		const mins = this.pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
-// 		const secs = this.pad(Math.floor((time % (1000 * 60)) / 1000));
-
-// 		return {days, hours, mins, secs }
-// 	}	
-
-// }
-
-// const timer = new Timer({
-// 	onTick: updateClockface
-// });
-
-// function updateClockface({ days, hours, mins, secs }) {
-// 	refs.timerDays.textContent = `${days}`;
-// 	refs.timerHours.textContent = `${hours}`;
-// 	refs.timerMins.textContent = `${mins}`;
-// 	refs.timerSecs.textContent = `${secs}`;
-// }
-
-// timer.start()
-
